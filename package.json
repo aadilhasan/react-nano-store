@@ -1,8 +1,9 @@
 {
   "name": "react-nano-store",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "0.1.0",
+  "author": "Aadil Hasan",
+  "license": "MIT",
+  "description": "react-nano-store is an incredibly lightweight 0.5kb, blazing fast, easy to use state management utility for React.",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -12,8 +13,8 @@
     "prepack": "json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\""
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
+    "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -33,18 +34,18 @@
     "vitest": "^0.30.0"
   },
   "peerDependencies": {
-    "react": "^18.2.0"
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },
   "files": [
     "dist"
   ],
-  "main": "./dist/my-lib.umd.js",
-  "module": "./dist/my-lib.es.js",
+  "main": "./dist/react-nano-store.umd.js",
+  "module": "./dist/react-nano-store.es.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/my-lib.es.js",
-      "require": "./dist/my-lib.umd.js"
+      "import": "./dist/react-nano-store.es.js",
+      "require": "./dist/react-nano-store.umd.js"
     }
   },
   "keywords": [

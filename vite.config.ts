@@ -8,16 +8,18 @@ export default defineConfig({
   plugins: [
     react(),
     dts({
-      entryRoot: path.resolve(__dirname, "examples/lib"),
+      entryRoot: path.resolve(__dirname, "lib/index.ts"),
       insertTypesEntry: true,
       exclude: ["examples/vite-env.d.ts"],
+      // need to add /* here, for some some reason if just giving dist/ it will generate some types outside dist folder
+      outputDir: path.resolve(__dirname, "dist/*"),
     }),
   ],
   build: {
     lib: {
       entry: path.resolve(__dirname, "lib/index.ts"),
       name: "react-nano-store",
-      formats: ["es", "umd", "cjs"],
+      formats: ["es", "umd"],
       fileName: (format) => `react-nano-store.${format}.js`,
     },
     rollupOptions: {
