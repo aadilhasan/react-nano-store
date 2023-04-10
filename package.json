@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "prepack": "json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\""
+    "prepack": "yarn build & json -f package.json -I -e \"delete this.devDependencies; delete this.dependencies\""
   },
   "dependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
@@ -35,7 +35,7 @@
     "vitest": "^0.30.0"
   },
   "peerDependencies": {
-    "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
+    "react": "^16.8.0"
   },
   "files": [
     "dist"
@@ -49,6 +49,14 @@
       "require": "./dist/react-nano-store.umd.js"
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aadilhasan/react-nano-store.git"
+  },
+  "bugs": {
+    "url": "https://github.com/aadilhasan/react-nano-store/issues"
+  },
+  "homepage": "https://github.com/aadilhasan/react-nano-store",
   "keywords": [
     "react-nano-store",
     "useStore"
