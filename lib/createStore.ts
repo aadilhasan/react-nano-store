@@ -12,31 +12,19 @@ export function createStore<Store extends Record<string, any>>(
 ): ContextReturn<Store> {
   type StoreKeys = Keys<Store>;
   let store = { ...initialStore };
-  const subscribers = new Map<StoreKeys, SubscribeCallback<Store>[]>();
+  const subscribers = new Set<SubscribeCallback<Store>>();
 
-  const subscribe = (
-    values: StoreKeys[],
-    callback: SubscribeCallback<Store>
-  ) => {
-    values.forEach((value) => {
-      const callbacks = subscribers.get(value) || [];
-      callbacks.push(callback);
-      subscribers.set(value, callbacks);
-    });
+  const subscribe = (callback: SubscribeCallback<Store>) => {
+    subscribers.add(callback);
     return () => {
-      values.forEach((value) => {
-        const callbacks = subscribers.get(value) || [];
-        subscribers.set(
-          value,
-          callbacks.filter((cb) => cb !== callback)
-        );
-      });
+      subscribers.delete(callback);
     };
   };
 
   const emit = (key: StoreKeys, value: any) => {
-    const callbacks = subscribers.get(key) || [];
-    callbacks.forEach((cb) => cb(key, value));
+    subscribers.forEach((subscriber) => {
+      subscriber(key, value);
+    });
   };
 
   const set = (key: StoreKeys, value: any) => {
@@ -56,9 +44,11 @@ export function createStore<Store extends Record<string, any>>(
 
     useEffect(() => {
       const onValueChange = (key: StoreKeys, value: Store[StoreKeys]) => {
-        setState((prev) => ({ ...prev, [key]: value }));
+        if (keysRef.current.includes(key as K)) {
+          setState((prev) => ({ ...prev, [key]: value }));
+        }
       };
-      return subscribe(keysRef.current, onValueChange);
+      return subscribe(onValueChange);
     }, [keysRef]);
 
     const updateState: StateSetter<K, Store> = useCallback(

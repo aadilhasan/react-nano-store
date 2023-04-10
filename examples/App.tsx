@@ -6,7 +6,15 @@ const useContext = createStore({
   count2: 1,
 });
 
-const context = React.createContext([
+const context = React.createContext<
+  [
+    {
+      count1: number;
+      count2: number;
+    },
+    (partialState: any) => void
+  ]
+>([
   {
     count1: 1,
     count2: 1,
