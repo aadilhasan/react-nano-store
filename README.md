@@ -1,0 +1,1 @@
+### A nano (0.5kb) store for react, very good alternative to React.contxet
