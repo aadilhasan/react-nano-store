@@ -5,7 +5,7 @@
 <div align="center">
 <a href="#">Website</a> 
 <span> · </span>
-<a href="#getting-started">Documentation</a> 
+<a href="#getting-started">Documentation</a>
 </div>
 <br/>
 
@@ -15,6 +15,8 @@
   - No need to wrap your app/page/compoent in Provider, it just works.
 
   *React Nano Store provides solutions to many of the issues commonly associated with using React.Context, such as unnecessary re-renders the need for boilerplate code, and difficulty of use.*
+  
+  <a href="#nano-store-vs-context">Nano Store and Context Comparison</a>
 
 ##  Installation
 
@@ -42,23 +44,20 @@ const initialStoreValue = {name: 'Baby Yoda', age: 50 }
 const  useStore = createStore(initialStoreValue);
 
 const ComponentOne = () => {
-    //hook takes an array of string, which tells it what values to get from store
-	const [{count}, updateStore] = useStore(['age']); 
-	return (
-		<button onClick={updateStore({age: age+1)}>
-			{count}
-		</button>
-	);
-}
+  //hook takes an array of string, which tells it what values to get from store
+  const [{ age }, updateStore] = useStore(["age"]);
+  return <button onClick={() => updateStore({ age: age + 1 })}>{age}</button>;
+};
 
 const ComponentTwo = () => {
-	const [{count}] = useStore(['count']);
-	return (
-		<div>
-		{count} // count here will automatically get updated when changed from ComponentOne
-		</div>
-	);
-}
+  const [{ age }] = useStore(["age"]);
+  return (
+    <div>
+      {/* age here will automatically get updated when changed from ComponentOne */}
+      {age}
+    </div>
+  );
+};
 
 ```
 
@@ -87,4 +86,59 @@ const initialStore = {name: 'Baby Yoda', age: 50 };
 const  useStore = createStore(initialStore);
 
 const [{name}, updateState] = useStore(['name'])
+```
+
+## Nano Store VS Context
+
+### Nano Store
+
+```jsx
+import { createStore } from 'react-nano-store';
+
+const useStore = createStore({count: 0});
+
+const ComponentOne = () => {
+  const [{ count }, updateStore] = useStore(["count"]);
+
+  return <button onClick={() => updateStore({ count: count + 1 })}>{count}</button>;
+};
+```
+
+### Context
+
+```jsx
+import { useContext, useState } from "react";
+
+const context = React.createContext<ContextType>({
+  count: 1,
+  updateCount: (newCount: number) => {},
+});
+
+const Provider = ({ children }: any) => {
+  const [count, setCount] = useState(0);
+
+  const updateCount = (newCount: number) => {
+    setCount(newCount);
+  };
+
+  return (
+    <context.Provider value={{ count, updateCount }}>
+      {children}
+    </context.Provider>
+  );
+};
+
+const Component = () => {
+  const { count, updateCount } = useContext(context);
+
+  return <button onClick={() => updateCount(count + 1)}>{count}</button>;
+};
+
+const App = () => {
+  return (
+    <Provider>
+      <Component />
+    </Provider>
+  );
+};
 ```
