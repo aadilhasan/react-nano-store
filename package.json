@@ -1,6 +1,6 @@
 {
   "name": "react-nano-store",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "Aadil Hasan",
   "license": "MIT",
   "description": "react-nano-store is an incredibly lightweight 0.5kb, blazing fast, easy to use state management utility for React.",
@@ -46,7 +46,8 @@
   "exports": {
     ".": {
       "import": "./dist/react-nano-store.es.js",
-      "require": "./dist/react-nano-store.umd.js"
+      "require": "./dist/react-nano-store.umd.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "repository": {
