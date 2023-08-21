@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { createStore } from "../lib";
 
-const useContext = createStore({
+const useNanoStore = createStore({
   count1: 1,
   count2: 1,
+  name: "",
 });
 
 const context = React.createContext<
@@ -40,16 +41,22 @@ const Provider = ({ children }: any) => {
 };
 
 const CompOne = () => {
-  const [{ count1 }, updated] = useContext(["count1"]);
+  const [_, updated] = useNanoStore();
   return (
-    <button onClick={() => updated({ count1: count1 + 1 })}> {count1} </button>
+    <button onClick={() => updated(({ count2 }) => ({ count2: count2 + 1 }))}>
+      {" "}
+      Add to count2{" "}
+    </button>
   );
 };
 
 const CompTwo = () => {
-  const [{ count2 }, updated] = useContext(["count2"]);
+  const [{ count2 }, updated] = useNanoStore(["count2"]);
   return (
-    <button onClick={() => updated({ count2: count2 + 1 })}> {count2} </button>
+    <button onClick={() => updated({ count2: count2 + 1 })}>
+      {" "}
+      count2 = {count2}{" "}
+    </button>
   );
 };
 

@@ -5,6 +5,8 @@ import {
   SubscribeCallback,
   HookReturnType,
   StateSetter,
+  HookStateUpdater,
+  StateType,
 } from "./types";
 
 export function createStore<Store extends Record<string, any>>(
@@ -32,32 +34,45 @@ export function createStore<Store extends Record<string, any>>(
     emit(key, value);
   };
 
-  function useStore<K extends StoreKeys>(keys: K[]): HookReturnType<K, Store> {
-    const keysRef = useRef(keys);
-    const [state, setState] = useState<Record<K, any>>(() => {
-      let _state = {} as Record<K, any>;
-      keys.forEach((key) => {
-        _state[key] = store[key];
-      });
+  function useStore<KeysArray extends StoreKeys>(
+    keys: KeysArray[] = []
+  ): HookReturnType<KeysArray, Store> {
+    const keysRef = useRef(keys || []);
+    const [state, setState] = useState<StateType<Store, KeysArray>>(() => {
+      let _state = {} as StateType<Store, KeysArray>;
+      if (keys) {
+        keys.forEach((key) => {
+          // @ts-ignore
+          _state[key] = store[key];
+        });
+      }
       return _state;
     });
 
     useEffect(() => {
       const onValueChange = (key: StoreKeys, value: Store[StoreKeys]) => {
-        if (keysRef.current.includes(key as K)) {
+        if (keysRef.current.includes(key as KeysArray)) {
           setState((prev) => ({ ...prev, [key]: value }));
         }
       };
       return subscribe(onValueChange);
     }, [keysRef]);
 
-    const updateState: StateSetter<K, Store> = useCallback(
-      (newState: Partial<Record<K, Store[K]>>) => {
-        keysRef.current.forEach((value) => {
-          if (value in newState) {
-            set(value, newState[value]);
+    const updateState: HookStateUpdater<Store> = useCallback(
+      (newStateOrCallback) => {
+        let newState: Partial<Store> = {};
+
+        if (typeof newStateOrCallback === "function") {
+          newState = newStateOrCallback(store);
+        } else {
+          newState = newStateOrCallback;
+        }
+
+        for (let key in newState) {
+          if (key in store) {
+            set(key, newState[key]);
           }
-        });
+        }
       },
       []
     );
